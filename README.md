@@ -1,5 +1,7 @@
 # Quire Projects — Automated Status Report Pipeline
 
+Disclaimer: This repository is the public version of an original repository that contains private information.
+
 A Python pipeline that fetches task and time-tracking data from **Quire** via OAuth2, processes it through a configurable assignee-resolution engine, and delivers a formatted **HTML email report** with plain-text attachments — triggered on demand or on schedule via **GitHub Actions**.
 
 ---
