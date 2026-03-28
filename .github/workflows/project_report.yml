@@ -1,0 +1,51 @@
+name: Project Status Report
+
+on:
+  # Trigger manually from GitHub Actions UI
+  workflow_dispatch:
+  # Uncomment to schedule automatic runs (UTC cron syntax):
+  # schedule:
+  #   - cron: '0 8 * * 1'   # Every Monday at 08:00 UTC
+
+jobs:
+  run-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run report pipeline
+        env:
+          # Quire API credentials
+          QUIRE_CLIENT_ID:     ${{ secrets.QUIRE_CLIENT_ID }}
+          QUIRE_CLIENT_SECRET: ${{ secrets.QUIRE_CLIENT_SECRET }}
+          QUIRE_REFRESH_TOKEN: ${{ secrets.QUIRE_REFRESH_TOKEN }}
+
+          # Email configuration
+          EMAIL_SENDER:     ${{ secrets.EMAIL_SENDER }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
+          EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
+
+          # Report display label (no company name hard-coded)
+          REPORT_LABEL: ${{ secrets.REPORT_LABEL }}
+
+          # Team and project configuration (JSON or comma-separated)
+          SPECIAL_STAFF:       ${{ secrets.SPECIAL_STAFF }}
+          PROYECTOS_OBJETIVO:  ${{ secrets.PROYECTOS_OBJETIVO }}
+          ASSIGNEE_NAMES:      ${{ secrets.ASSIGNEE_NAMES }}
+          RULE_MAPPING:        ${{ secrets.RULE_MAPPING }}
+          NAME_NORMALIZATION:  ${{ secrets.NAME_NORMALIZATION }}
+
+          # Performance targets (optional overrides)
+          TARGET_WEEKLY:  ${{ secrets.TARGET_WEEKLY }}
+          TARGET_MONTHLY: ${{ secrets.TARGET_MONTHLY }}
+        run: python main.py
